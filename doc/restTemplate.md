@@ -5,7 +5,7 @@ Spring 调用http的Client核心类．它简化与http server的通信，封装�
 它内部处理http connection，抽取结果，只需应用程序提供url即可．
 在http通信的底层，它默认采用的是Jdk的标准设施，当然你也可以切换成其它的http类库
 例如`Apache` `HttpComponents`, `Netty`, and `OkHttp`等.
-
+*这个类是用在同步调用上的，异步调用请移步`AsyncRestTemplate`*
 最简单的上手方式:
 
 ``` Java
@@ -107,4 +107,38 @@ return doExecute(expanded, method, requestCallback, responseExtractor);
 ###### ResponseExtractor接口
 负责从Http response中抽取数据，转换成客户端指定的类型，其抽取转换过程是依赖`HttpMessageConverter`
 
+这是抽取的核心代码:
+```Java
+	public T extractData(ClientHttpResponse response) throws IOException {
+		MessageBodyClientHttpResponseWrapper responseWrapper = new MessageBodyClientHttpResponseWrapper(response);
+		if (!responseWrapper.hasMessageBody() || responseWrapper.hasEmptyMessageBody()) {
+			return null;
+		}
+		MediaType contentType = getContentType(responseWrapper);
 
+		for (HttpMessageConverter<?> messageConverter : this.messageConverters) {
+			if (messageConverter instanceof GenericHttpMessageConverter) {
+				GenericHttpMessageConverter<?> genericMessageConverter = (GenericHttpMessageConverter<?>) messageConverter;
+				if (genericMessageConverter.canRead(this.responseType, null, contentType)) {
+					if (logger.isDebugEnabled()) {
+						logger.debug("Reading [" + this.responseType + "] as \"" +
+								contentType + "\" using [" + messageConverter + "]");
+					}
+					return (T) genericMessageConverter.read(this.responseType, null, responseWrapper);
+				}
+			}
+			if (this.responseClass != null) {
+				if (messageConverter.canRead(this.responseClass, contentType)) {
+					if (logger.isDebugEnabled()) {
+						logger.debug("Reading [" + this.responseClass.getName() + "] as \"" +
+								contentType + "\" using [" + messageConverter + "]");
+					}
+					return (T) messageConverter.read((Class) this.responseClass, responseWrapper);
+				}
+			}
+		}
+
+		throw new RestClientException("Could not extract response: no suitable HttpMessageConverter found " +
+				"for response type [" + this.responseType + "] and content type [" + contentType + "]");
+	}
+```
