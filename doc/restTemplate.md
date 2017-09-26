@@ -142,4 +142,4 @@ public T extractData(ClientHttpResponse response) throws IOException {
             "for response type [" + this.responseType + "] and content type [" + contentType + "]");
 }
 ```
-<http://>
+原文地址：<https://github.com/284831721/winteriscoming/blob/master/doc/restTemplate.md>
