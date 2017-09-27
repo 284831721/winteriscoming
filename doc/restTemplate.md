@@ -21,21 +21,21 @@ ResponseEntity<List<MyResponse>> response = template.exchange(request, myBean);
 
 ```
 主要的方法有：
-```Java
-HTTP method	RestTemplate methods
-DELETE	delete(java.lang.String, java.lang.Object...)
-GET	getForObject(java.lang.String, java.lang.Class<T>, java.lang.Object...)
-getForEntity(java.lang.String, java.lang.Class<T>, java.lang.Object...)
-HEAD	headForHeaders(java.lang.String, java.lang.Object...)
-OPTIONS	optionsForAllow(java.lang.String, java.lang.Object...)
-POST	postForLocation(java.lang.String, java.lang.Object, java.lang.Object...)
-postForObject(java.lang.String, java.lang.Object, java.lang.Class<T>, java.lang.Object...)
-PUT	put(java.lang.String, java.lang.Object, java.lang.Object...)
-any	exchange(java.lang.String, org.springframework.http.HttpMethod, org.springframework.http.HttpEntity<?>, java.lang.Class<T>, java.lang.Object...)
-execute(java.lang.String, org.springframework.http.HttpMethod, org.springframework.web.client.RequestCallback, org.springframework.web.client.ResponseExtractor<T>, java.lang.Object...)
-```
 
-*注意：传入的url会被encode，所以不要传入encode的url，以防重复encode,可以考虑使用 `UriComponentsBuilder`*
+HTTP method	| RestTemplate methods
+:----------------|---------------------
+DELETE	|delete(java.lang.String, java.lang.Object...)
+GET	|getForObject(java.lang.String, java.lang.Class<T>, java.lang.Object...)
+GET|getForEntity(java.lang.String, java.lang.Class<T>, java.lang.Object...)
+HEAD|	headForHeaders(java.lang.String, java.lang.Object...)
+OPTIONS|	optionsForAllow(java.lang.String, java.lang.Object...)
+POST|	postForLocation(java.lang.String, java.lang.Object, java.lang.Object...)
+POST|postForObject(java.lang.String, java.lang.Object, java.lang.Class<T>, java.lang.Object...)
+PUT|	put(java.lang.String, java.lang.Object, java.lang.Object...)
+any|	exchange(java.lang.String, org.springframework.http.HttpMethod, org.springframework.http.HttpEntity<?>, java.lang.Class<T>, java.lang.Object...)
+any|execute(java.lang.String, org.springframework.http.HttpMethod, org.springframework.web.client.RequestCallback, org.springframework.web.client.ResponseExtractor<T>, java.lang.Object...)
+
+- 注意：传入的url会被encode，所以不要传入encode的url，以防重复encode,可以考虑使用 `UriComponentsBuilder`
 
 在template内部使用是`HttpMessageConverter`来负责http message与POJO之间的互相转换，默认主要类型的Mime type的Converter会被自动注册，此外你也可以通过`setMessageConverters`来添加自定义converter.
 来看默认的构造函数，只要对应的第三方类库存在classpath中，就会注册相应的`HttpMessageConverter`
@@ -143,3 +143,4 @@ public T extractData(ClientHttpResponse response) throws IOException {
 }
 ```
 原文地址：<https://github.com/284831721/winteriscoming/blob/master/doc/restTemplate.md>
+
