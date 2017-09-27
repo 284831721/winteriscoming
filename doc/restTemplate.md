@@ -1,11 +1,21 @@
 ## Spring RestTemplate
 > Spring's central class for synchronous client-side HTTP access. It simplifies communication with HTTP servers, and enforces RESTful principles. It handles HTTP connections, leaving application code to provide URLs (with possible template variables) and extract results.
 
-Spring 调用http的Client核心类．它简化与http server的通信，封装通信的细节，并强制遵循restfult规则．
-它内部处理http connection，抽取结果，只需应用程序提供url即可．
+> 调用方：不要告诉我对方给的是什么json xml rss atom feed这些格式，我只要Java Pojo.
+> RestTemplate:好的，我来做．
+
+RestTemplate是Spring 调用http的client端核心类．顾名思义，与其它template类如`JdbcTemplate`一样，它封装了与http server的通信的细节，使调用端无须关心http接口响应的消息是什么格式，统统使用Java Pojo来接收请求结果．它主要做了以下事情：
+
+- 封装Http通信细节
+- 封装Http请求参数
+- 转换各种不同格式的Http消息(json xml rss atom ...)
+- 抽取结果并转成Java Pojo对象
+
+
 在http通信的底层，它默认采用的是Jdk的标准设施，当然你也可以切换成其它的http类库
 例如`Apache` `HttpComponents`, `Netty`, and `OkHttp`等.
-*这个类是用在同步调用上的，异步调用请移步`AsyncRestTemplate`*
+> 这个类是用在同步调用上的，异步调用请移步`AsyncRestTemplate`
+
 最简单的上手方式:
 
 ``` Java
@@ -22,18 +32,18 @@ ResponseEntity<List<MyResponse>> response = template.exchange(request, myBean);
 ```
 主要的方法有：
 
-HTTP method	| RestTemplate methods
-:----------------|---------------------
-DELETE	|delete(java.lang.String, java.lang.Object...)
-GET	|getForObject(java.lang.String, java.lang.Class<T>, java.lang.Object...)
-GET|getForEntity(java.lang.String, java.lang.Class<T>, java.lang.Object...)
-HEAD|	headForHeaders(java.lang.String, java.lang.Object...)
-OPTIONS|	optionsForAllow(java.lang.String, java.lang.Object...)
-POST|	postForLocation(java.lang.String, java.lang.Object, java.lang.Object...)
-POST|postForObject(java.lang.String, java.lang.Object, java.lang.Class<T>, java.lang.Object...)
-PUT|	put(java.lang.String, java.lang.Object, java.lang.Object...)
-any|	exchange(java.lang.String, org.springframework.http.HttpMethod, org.springframework.http.HttpEntity<?>, java.lang.Class<T>, java.lang.Object...)
-any|execute(java.lang.String, org.springframework.http.HttpMethod, org.springframework.web.client.RequestCallback, org.springframework.web.client.ResponseExtractor<T>, java.lang.Object...)
+```Java
+DELETE	delete(java.lang.String, java.lang.Object...)
+GET	 getForObject(java.lang.String, java.lang.Class<T>, java.lang.Object...)
+GET      getForEntity(java.lang.String, java.lang.Class<T>, java.lang.Object...)
+HEAD	headForHeaders(java.lang.String, java.lang.Object...)
+OPTIONS 	optionsForAllow(java.lang.String, java.lang.Object...)
+POST	postForLocation(java.lang.String, java.lang.Object, java.lang.Object...)
+POSt    postForObject(java.lang.String, java.lang.Object, java.lang.Class<T>, java.lang.Object...)
+PUT	put(java.lang.String, java.lang.Object, java.lang.Object...)
+any	exchange(java.lang.String, org.springframework.http.HttpMethod, org.springframework.http.HttpEntity<?>, java.lang.Class<T>, java.lang.Object...)
+any    execute(java.lang.String, org.springframework.http.HttpMethod, org.springframework.web.client.RequestCallback, org.springframework.web.client.ResponseExtractor<T>, java.lang.Object...)
+```
 
 - 注意：传入的url会被encode，所以不要传入encode的url，以防重复encode,可以考虑使用 `UriComponentsBuilder`
 
