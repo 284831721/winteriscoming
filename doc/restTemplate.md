@@ -1,8 +1,14 @@
 ## Spring RestTemplate
 > Spring's central class for synchronous client-side HTTP access. It simplifies communication with HTTP servers, and enforces RESTful principles. It handles HTTP connections, leaving application code to provide URLs (with possible template variables) and extract results.
 
-> 调用方：不要告诉我对方给的是什么json xml rss atom feed这些格式，我只要Java Pojo.
-> RestTemplate:好的，我来做．
+
+什么是 RestTemplate？
+
+RestTemplate是一个http请求的客户端工具，它不是类似HttpClient的东东，也不是类似Jackson，jaxb等工具，但它封装了这些工具．
+
+RestTemplate能做什么？
+
+RestTemplate是Spring 调用http的client端核心类．顾名思义，与其它template类如 JdbcTemplate一样，它封装了与http server的通信的细节，使调用端无须关心http接口响应的消息是什么格式，统一使用Java Pojo来接收请求结果．它主要做了以下事情：
 
 RestTemplate是Spring 调用http的client端核心类．顾名思义，与其它template类如`JdbcTemplate`一样，它封装了与http server的通信的细节，使调用端无须关心http接口响应的消息是什么格式，统统使用Java Pojo来接收请求结果．它主要做了以下事情：
 
@@ -16,7 +22,7 @@ RestTemplate是Spring 调用http的client端核心类．顾名思义，与其它
 例如`Apache` `HttpComponents`, `Netty`, and `OkHttp`等.
 > 这个类是用在同步调用上的，异步调用请移步`AsyncRestTemplate`
 
-最简单的上手方式:
+最简单的上手方式，我们拿到的result直接就是Java Pojo，而不需要我们自己解析转换对方接口返回的Json格式数据:
 
 ``` Java
 RestTemplate template = new RestTemplate();
